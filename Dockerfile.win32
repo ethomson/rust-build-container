@@ -1,0 +1,29 @@
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
+
+RUN mkdir C:\Temp
+
+RUN mkdir C:\Temp\Chocolatey
+ADD https://chocolatey.org/install.ps1 C:/Temp/Chocolatey
+RUN powershell C:\Temp\Chocolatey\install.ps1
+
+RUN choco install -y git --params "/GitAndUnixToolsOnPath /NoShellIntegration /NoCredentialManager"
+
+ADD https://bintray.com/libgit2/build-dependencies/download_file?file_path=msys2.zip C:/Temp/msys2.zip
+RUN powershell -Command Expand-Archive -Path C:\Temp\msys2.zip -DestinationPath C:/
+RUN setx MSYS_PATH "C:\msys2"
+RUN setx /M PATH "%MSYS_PATH%\usr\bin;%PATH%"
+RUN pacman -S --noconfirm --needed base-devel ca-certificates make diffutils tar
+
+RUN choco install -y 7zip
+
+RUN choco install -y python2 --params '"/InstallDir:C:\python27amd64"'
+
+RUN choco install -y cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+
+RUN choco install -y visualstudio2017community
+RUN choco install -y visualstudio2017-workload-nativedesktop
+
+RUN setx /M PATH "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x86;%PATH%"
+
+RUN powershell -Command Remove-Item C:\Temp\Chocolatey\install.ps1
+RUN powershell -Command Remove-Item C:\Temp\msys2.zip
