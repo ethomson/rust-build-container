@@ -23,6 +23,7 @@ RUN choco install -y cmake --installargs 'ADD_CMAKE_TO_PATH=System'
 RUN choco install -y visualstudio2017community
 RUN choco install -y visualstudio2017-workload-nativedesktop
 RUN choco install -y visualstudio2017-workload-vctools 
+RUN choco install -y visualstudio2017buildtools 
 
 RUN setx /M PATH "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\HostX86\x86;%PATH%"
 
